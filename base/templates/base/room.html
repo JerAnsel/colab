@@ -1,0 +1,68 @@
+{% extends 'main.html' %}
+
+{% block content %}
+
+<div class="room-container">
+
+    <div>
+
+        <h1>{{room.name}}</h1>
+
+        <p>{{room.name}}</p>
+
+        <p>{{room.description}}</p>
+
+        <div class="comment-wrapper">
+            <h3>Conversation</h3>
+            <hr>
+            
+            {% for message in room_messages %}
+            <div>
+                <small>{{message.user}}  {{message.created|timesince}} ago</small>
+                {% if not request.user == message.user}
+                    <p>{{message.body}}</p>
+             
+                {% else %}
+                
+                    {% if not editing%}
+                        <p>{{message.body}}</p>
+                        <small>Edit</small>
+                    
+                    {% else %}
+
+                        {% if message != user_message}
+                            <p>{{message.body}}</p>
+
+                        {% else %}
+
+                        {% endif %}
+
+                    {% endif %}
+
+                {% endif %}
+                <hr>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% if request.user.is_authenticated %}
+        <div class="comment-form">
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="text" name="body" placeholder="Write your message here..." />
+                <input type="submit" value="Post"  name="create_message_frm">
+            </form>
+        </div>
+
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}
+
+if not user's message
+    show normally
+else
+    if editing and not editing_message
+        show normally
+    
