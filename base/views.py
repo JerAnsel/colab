@@ -93,10 +93,19 @@ def room(request, pk):
             )
             return redirect('room', pk=room.id)
 
-        else:
+        elif 'edit_form' in request.POST:
             message = Message.objects.get(
-                    id=
+                    id=request.POST.get('mid'),
                 )
+            message.body = request.POST.get('body')
+            message.save()
+            return redirect('room', pk=room.id)
+        
+        elif 'delete_message' in request.POST:
+            message = Message.objects.get(
+                    id=request.POST.get('mid'),
+                )
+            message.delete()
             return redirect('room', pk=room.id)
 
     context = {'room': room, 'room_messages': room_messages}

@@ -5,6 +5,79 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudyBud</title>
+    {% load static %}
+
+    <script>
+        function message_editor(element) {
+            
+            let message_div = element.parentElement;
+            let id = message_div.getAttribute('data-mid') ;
+            let content = message_div.getElementsByClassName('message-content')[0].innerText;
+            let edit_form = document.createElement('form');
+            edit_form.method = "POST";
+            edit_form.action = "";
+            let text_field = document.createElement('input');
+            text_field.name = "body";
+            text_field.type = "text";
+            text_field.value = content;
+            
+            let token = message_div.querySelector("input[name=csrfmiddlewaretoken]");
+            edit_form.appendChild(token);
+
+            for(let child of Array.from(message_div.children).slice(1)){
+                message_div.removeChild(child);
+            };
+            
+            edit_form.appendChild(text_field);
+
+            let mid = document.createElement('input');
+            mid.type = "hidden";
+            mid.value = id;
+            mid.name = "mid";
+
+            edit_form.appendChild(mid);
+
+            let submit = document.createElement('input');
+            submit.type = "submit";
+            submit.name = "edit_form";
+            submit.value = "Save Changes";
+
+            edit_form.appendChild(submit);
+            edit_form.appendChild(document.createElement('hr'));
+            message_div.appendChild(edit_form);
+        };
+
+        function delete_message(element){
+            if (confirm('Are you sure you want to delete this message?')){
+                let message_div = element.parentElement;
+                let id = message_div.getAttribute('data-mid');
+
+                let delete_form = document.createElement('form');
+                delete_form.method = "POST";
+                delete_form.action = "";
+                
+                let token = message_div.querySelector("input[name=csrfmiddlewaretoken]");
+                delete_form.appendChild(token);
+
+                let mid = document.createElement('input');
+                mid.type = "hidden";
+                mid.value = id;
+                mid.name = "mid";
+                delete_form.appendChild(mid);
+
+                let form_name = document.createElement('input');
+                form_name.type = "hidden";
+                form_name.name = "delete_message";
+                form_name.value = "DELETEME"
+                
+                delete_form.appendChild(form_name);
+                document.body.append(delete_form)
+                delete_form.submit();
+            }
+            
+        };
+    </script>
+
 </head>
 <body>
     {% include 'navbar.html' %}
