@@ -3,34 +3,122 @@
 
 {% block content %}
 
-{% if page == 'login' %}
-<div>
-    <form method="POST" action="">
-        {% csrf_token %}
-        <label>Username:</label>
-        <input type="text" name="username" placeholder="Enter Username" />
+<main id="main" class="main">
 
-        <label>Password:</label>
-        <input type="password" name="password" placeholder="Enter Password" />
+    <section class="section dashboard">
 
-        <input type="submit" value="Login"/>
-    </form>
 
-    <p>Haven't signed up yet?</p>
-    <a href="{% url 'register' %}">Sign up</a>
-</div>
+        
 
-{% else %}
+<!-- 
+        <div class="row">
+            <div class="col-lg-12">
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <label>Username:</label>
+                    <input type="text" name="username" placeholder="Enter Username" />
 
-<div>
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" value="Register"/>
-    </form>
-    <p>Already signed up?</p>
-    <a href="{% url 'login' %}">Login</a>
-</div>
-{% endif %}
+                    <label>Password:</label>
+                    <input type="password" name="password" placeholder="Enter Password" />
 
+                    <input type="submit" value="Login"/>
+                </form> 
+
+
+            </div>
+        </div>-->
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    {% if page == 'login' %}
+                    <h5 class="card-title">Login</h5>
+                    <div class="card-body">
+                        <p>Login to get back to work!</p>
+                        <form method= "POST" class="row g-3">
+                            {% csrf_token %}
+                            <div class="col-md-4">
+                                <div class="form-floating mb-3"> 
+                                    <input type="text" name="username" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required="" placeholder="Username">
+                                    <label for="validationCustomUsername">Username</label>
+                                </div>
+                                <div class="form-floating mb-3"> 
+                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password"> 
+                                    <label for="floatingPassword">Password</label>
+                                </div>                     
+                            </div>
+                            
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Login</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>Haven't signed up yet?</p>
+        <a href="{% url 'register' %}">Sign up</a>
+
+
+        {% else %}
+
+        <h5 class="card-title">Sign Up</h5>
+                    <div class="card-body">
+                        <p>Sign up to join projects and create projects of your own!</p>
+                        <form method= "POST" class="row g-3">
+                            {% csrf_token %}
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3"> 
+                                    <input type="text" name="username" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required="" placeholder="Username">
+                                    <label for="validationCustomUsername">Username</label>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <p class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3"> 
+                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password"> 
+                                    <label for="floatingPassword">Password</label>
+                                </div>                     
+                            </div>
+
+                            <div class="col-md-12">
+                                <ul><li>Your password can’t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can’t be a commonly used password.</li><li>Your password can’t be entirely numeric.</li></ul>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3"> 
+                                    <input type="password" name="password2" class="form-control" autocomplete="new-password" required="" id="id_password2" aria-describedby="inputGroupPrepend" placeholder="Password Confirmation">
+                                    <label for="id_password2">Password confirmation</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <span class="helptext">Enter the same password as before, for verification.</span></p>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" type="submit">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p>Already signed up?</p>
+        <a href="{% url 'login' %}">Login</a>
+
+
+        <div>
+            <form method="POST" action="">
+                {% csrf_token %}
+                {{form.as_p}}
+                <input type="submit" value="Register"/>
+            </form>
+            <p>Already signed up?</p>
+            <a href="{% url 'login' %}">Login</a>
+        </div>
+        {% endif %}
+
+    </section>
+</main>
 {% endblock content %}
