@@ -53,17 +53,25 @@
         <!-- ======= Sidebar ======= -->
         <aside id="sidebar" class="sidebar">
 
+     
+
             <ul class="sidebar-nav" id="sidebar-nav">
-            {% for topic in topics %}
-        
-            <li class="nav-item">
-                <a class="nav-link " href="{% url 'home' %}?q={{topic.name}}">
-                <i class="bi bi-grid"></i>
-                <span>{{topic.name}}</span>
-                </a>
-            </li><!-- End Dashboard Nav -->
-            {% endfor %}
-        
+                <li class="nav-item">
+                    <a class="nav-link " href="{% url 'home' %}">
+                    <i class="bi bi-grid"></i>
+                    <span>All Rooms</span>
+                    </a>
+                </li>
+                {% for topic in topics %}
+            
+                <li class="nav-item">
+                    <a class="nav-link " href="{% url 'home' %}?q={{topic.name}}">
+                    <i class="bi bi-grid"></i>
+                    <span>{{topic.name}}</span>
+                    </a>
+                </li><!-- End Dashboard Nav -->
+                {% endfor %}
+            
             </ul>
         
         </aside><!-- End Sidebar-->
