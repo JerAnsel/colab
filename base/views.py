@@ -20,6 +20,7 @@ from .forms import RoomForm
 def loginPage(request):
 
     page = 'login'
+    topics = Topic.objects.all()
 
     if request.user.is_authenticated:
         return redirect('home')
@@ -41,7 +42,7 @@ def loginPage(request):
         else:
             messages.error(request, 'Username OR password does not exist')
 
-    context = {'page': page}
+    context = {'page': page, 'topics': topics}
     return render(request, 'base/login_register.html', context)
     
 def logoutUser(request):
@@ -50,6 +51,7 @@ def logoutUser(request):
 
 def registerPage(request):
     form = UserCreationForm()
+    topics = Topic.objects.all()
 
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -62,7 +64,7 @@ def registerPage(request):
         else:
             messages.error(request, 'An error occured during registration')
 
-    return render(request, 'base/login_register.html', {'form': form})
+    return render(request, 'base/login_register.html', {'form': form, 'topics': topics})
 
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
@@ -79,9 +81,13 @@ def home(request):
     return render(request, 'base/home.html', context)
 
 def room(request, pk):
+    topics = Topic.objects.all()
+    
     room = Room.objects.get(id=pk)
 
     room_messages = room.message_set.all().order_by('-created')
+
+    participants = room.participants.all()
 
     if request.method == 'POST':
 
@@ -91,6 +97,7 @@ def room(request, pk):
                 room=room,
                 body=request.POST.get('body')
             )
+            room.participants.add(request.user)
             return redirect('room', pk=room.id)
 
         elif 'edit_form' in request.POST:
@@ -108,11 +115,12 @@ def room(request, pk):
             message.delete()
             return redirect('room', pk=room.id)
 
-    context = {'room': room, 'room_messages': room_messages}
+    context = {'room': room, 'room_messages': room_messages, 'participants':participants, 'topics': topics}
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='/login')
 def createRoom(request):
+    topics = Topic.objects.all()
     form = RoomForm()
 
     if request.method == 'POST':
@@ -123,7 +131,7 @@ def createRoom(request):
             new_room.save()
             return redirect('home')
 
-    context = {'form': form}
+    context = {'topics': topics, 'form': form}
     return render(request, 'base/room_form.html', context)
 
 @login_required(login_url='/login')
