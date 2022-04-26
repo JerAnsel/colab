@@ -61,18 +61,28 @@
 
 <main id="main" class="main">
 
-  <div class="pagetitle">
-    <h1>{{room.name}}</h1>
-    <!-- <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Dashboard</li>
-      </ol>
-    </nav> -->
-  </div><!-- End Page Title -->
 
   <section class="section dashboard">
     <div class="row">
+
+      <div class="col-lg-8">
+        
+        <div class="row">
+          <div class="pagetitle col-lg-8">
+              <h1>{{room.name}}</h1>
+              <!-- <nav>
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item">{{room_count}} room{{room_count|pluralize}} found</li>
+                </ol>
+              </nav> -->
+          </div><!-- End Page Title -->
+          {% if request.user == room.host %}
+          <div class="col-lg-4 create-button">
+            <a href="{% url 'create-room' %}" class="btn btn-primary rounded-pill">Edit Room</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
 
       <!-- Left side columns -->
       <div class="col-lg-8">
@@ -172,6 +182,7 @@
                           <!-- <label for="inputText" class="col-sm-2 col-form-label">Text</label> -->
                           <div class="col-sm-12">
                             <input type="text" class="form-control" name="body" placeholder="Write your message here..." />
+                            <input type="hidden" name="create_message_form" value="create_message_form">
                           </div>
                         </div>
                     </form>
