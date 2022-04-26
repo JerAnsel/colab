@@ -91,7 +91,7 @@ def room(request, pk):
 
     if request.method == 'POST':
 
-        if 'create_message_frm' in request.POST:
+        if 'create_message_form' in request.POST:
             Message.objects.create(
                 user=request.user,
                 room=room,
@@ -122,6 +122,7 @@ def room(request, pk):
 def createRoom(request):
     topics = Topic.objects.all()
     form = RoomForm()
+    update = False
 
     if request.method == 'POST':
         form = RoomForm(request.POST)
@@ -131,34 +132,42 @@ def createRoom(request):
             new_room.save()
             return redirect('home')
 
-    context = {'topics': topics, 'form': form}
+    context = {'topics': topics, 'form': form, 'update': update}
     return render(request, 'base/room_form.html', context)
 
 @login_required(login_url='/login')
 def updateRoom(request, pk):
     room = Room.objects.get(id=pk)
     form = RoomForm(instance=room)
-    
+    topics = Topic.objects.all()
+
+    update = True
+
     if request.user != room.host:
         return HttpResponse('You are not allowed here!!')
 
     if request.method == 'POST':
+        if 'delete_room' in request.POST:
+            room.delete()
+            return redirect('home')
+
+
         form = RoomForm(request.POST, instance=room)
         if form.is_valid():
             form.save()
             return redirect('home')
 
-    context = {'form': form}
+    context = {'topics': topics, 'form': form, 'update': update}
     return render(request, 'base/room_form.html', context)
 
-@login_required(login_url='/login')
-def deleteRoom(request, pk):
-    room = Room.objects.get(id=pk)
+# @login_required(login_url='/login')
+# def deleteRoom(request, pk):
+#     room = Room.objects.get(id=pk)
     
-    if request.user != room.host:
-        return HttpResponse('You are not allowed here!!')
+#     if request.user != room.host:
+#         return HttpResponse('You are not allowed here!!')
 
-    if request.method == 'POST':
-        room.delete()
-        return redirect('home')
-    return render(request, 'base/delete.html', {'obj': room})
+#     if request.method == 'POST':
+#         room.delete()
+#         return redirect('home')
+#     return render(request, 'base/delete.html', {'obj': room})
