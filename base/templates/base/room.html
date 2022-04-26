@@ -70,15 +70,15 @@
         <div class="row">
           <div class="pagetitle col-lg-8">
               <h1>{{room.name}}</h1>
-              <!-- <nav>
+              <nav>
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item">{{room_count}} room{{room_count|pluralize}} found</li>
+                  <li class="breadcrumb-item">Created {{room.created}}</li>
                 </ol>
-              </nav> -->
+              </nav>
           </div><!-- End Page Title -->
           {% if request.user == room.host %}
           <div class="col-lg-4 create-button">
-            <a href="{% url 'create-room' %}" class="btn btn-primary rounded-pill">Edit Room</a>
+            <a href="{% url 'update-room' room.id %}" class="btn btn-primary rounded-pill">Edit Room</a>
           </div>
           {% endif %}
         </div>
