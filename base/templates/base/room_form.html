@@ -79,7 +79,11 @@
                             <div class="row mb-3">
                                 <label for="room_desc_input" class="col-sm-3 col-form-label">Description</label>
                                 <div class="col-sm-9">
+                                    {% if form.description.value is not None %}
                                     <textarea id="room_desc_input" name="description" type="textarea" class="form-control">{{form.description.value}}</textarea>
+                                    {% else %}
+                                    <textarea id="room_desc_input" name="description" type="textarea" class="form-control"></textarea>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-12">
