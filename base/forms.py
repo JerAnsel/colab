@@ -25,9 +25,11 @@ class UserForm(ModelForm):
             'password2': forms.PasswordInput(attrs={'name': 'password2', 'class': 'form-control', 'id': "password2",
             'aria-describedby': "inputGroupPrepend", 'placeholder': "Password"}),
             'first_name': forms.TextInput(attrs={'name': 'first_name', 'class': 'form-control', 'id': "first_name",
-            'aria-describedby': "inputGroupPrepend", 'placeholder': "First Name (Optional)"}),
+            'aria-describedby': "inputGroupPrepend", 'placeholder': "First Name", 'required':''}),
+            'last_name': forms.TextInput(attrs={'name': 'lasst_name', 'class': 'form-control', 'id': "last_name",
+            'aria-describedby': "inputGroupPrepend", 'placeholder': "Last Name", 'required':''}),
             'email': forms.EmailInput(attrs={'name': 'email', 'class': 'form-control', 'id': "email",
-            'aria-describedby': "inputGroupPrepend", 'placeholder': "Email"})
+            'aria-describedby': "inputGroupPrepend", 'placeholder': "Email", 'required':''})
         }
         
 
