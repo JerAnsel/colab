@@ -28,8 +28,10 @@
             </div>
         </div>-->
         <div class="row">
+            <div class="col-lg-2"></div>
             <div class="col-lg-8">
                 <div class="card">
+                    
                     {% if page == 'login' %}
                     <h5 class="card-title">Login</h5>
                     <div class="card-body">
@@ -38,12 +40,12 @@
                             {% csrf_token %}
                             <div class="col-md-4">
                                 <div class="form-floating mb-3"> 
-                                    <input type="text" name="username" class="form-control" id="validationCustomUsername" aria-describedby="inputGroupPrepend" required="" placeholder="Username">
-                                    <label for="validationCustomUsername">Username</label>
+                                    {{user_form.username}}
+                                    <label for="Username">Username</label>
                                 </div>
                                 <div class="form-floating mb-3"> 
-                                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password"> 
-                                    <label for="floatingPassword">Password</label>
+                                    {{user_form.password}}
+                                    <label for="Password">Password</label>
                                 </div>                     
                             </div>
                             
@@ -53,32 +55,46 @@
                         </form>
                     </div>
                 </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                        <p>Haven't signed up yet?</p>
+                        <a href="{% url 'register' %}">Sign up</a>
+                </div>
             </div>
         </div>
-        <p>Haven't signed up yet?</p>
-        <a href="{% url 'register' %}">Sign up</a>
-
-
         {% else %}
 
-        <h5 class="card-title">Sign Up</h5>
+                    <h5 class="card-title">Sign Up</h5>
                     <div class="card-body">
                         <p>Sign up to join projects and create projects of your own!</p>
+                        {% if messages %}
+                        <ul class="messages">
+                            {% for message in messages %}
+                            <li>{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                        {% endif %}
                         <form method= "POST" class="row g-3">
                             {% csrf_token %}
                             {{form.id}}
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="form-floating mb-3"> 
-                                    <input type="text" name="username" class="form-control" id="Username" aria-describedby="inputGroupPrepend" required="" placeholder="Username">
+                                    {{user_form.username}}
                                     <label for="Username">Username</label>
                                 </div>
                             </div>
                             <div class="col-md-12">
                                 <p class="helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</p>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="form-floating mb-3"> 
-                                    <input type="password" name="password1" class="form-control" id="floatingPassword" placeholder="Password"> 
+                                    {{user_form.first_name}}
+                                    <label for="Username">First Name (Optional)</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-7">
+                                <div class="form-floating mb-3"> 
+                                    {{user_form.password}}
                                     <label for="floatingPassword">Password</label>
                                 </div>                     
                             </div>
@@ -87,10 +103,10 @@
                                 <ul><li>Your password can’t be too similar to your other personal information.</li><li>Your password must contain at least 8 characters.</li><li>Your password can’t be a commonly used password.</li><li>Your password can’t be entirely numeric.</li></ul>
                             </div>
                             
-                            <div class="col-md-6">
+                            <div class="col-md-7">
                                 <div class="form-floating mb-3"> 
-                                    <input type="password" name="password2" class="form-control" autocomplete="new-password" required="" id="id_password2" aria-describedby="inputGroupPrepend" placeholder="Password Confirmation">
-                                    <label for="id_password2">Password confirmation</label>
+                                    {{user_form.password2}}
+                                    <label for="password2">Confirm Password</label>
                                 </div>
                             </div>
 
@@ -103,10 +119,14 @@
                         </form>
                     </div>
                 </div>
+                <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                    <p>Already signed up?</p>
+                    <a href="{% url 'login' %}">Login</a>
+                </div>
             </div>
+            
         </div>
-        <p>Already signed up?</p>
-        <a href="{% url 'login' %}">Login</a>
+
 
 <!-- 
         <div>
