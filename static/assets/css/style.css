@@ -233,13 +233,20 @@ h1, h2, h3, h4, h5, h6 {
 } */
 
 .card-title {
-  padding: 20px 20px 15px 20px;
+  padding-top: 20px;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  padding-left: 20px;
   font-size: 18px;
   font-weight: 500;
   color: #012970;
   font-family: "Poppins", sans-serif;
   display: flex;
   justify-content: space-between;
+}
+
+.left-aligned {
+  padding-left: 0px;
 }
 
 .form-button {
