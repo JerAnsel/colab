@@ -9,10 +9,10 @@ urlpatterns = [
     path('register/', views.registerPage, name='register'),
 
     path('', views.home, name='home'),
-    path('room/<str:pk>', views.room, name='room'),
-
-    path('create-room/', views.createRoom, name="create-room"),
-    path('update-room/<str:pk>/', views.updateRoom, name="update-room"),
+    path('project/<str:pk>', views.project, name='project'),
+    path('room/<str:pk>/<str:public>', views.room, name='room'),
+    path('create-project/', views.createProject, name="create-project"),
+    path('update-project/<str:pk>/', views.updateProject, name="update-project"),
     path('profile-page/<str:pk>/', views.profile, name="profile-page"),
     path('test', views.test, name='test'),
     path('images', views.images, name='images'),

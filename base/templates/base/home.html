@@ -13,15 +13,15 @@
         
         <div class="row">
           <div class="pagetitle col-lg-8">
-              <h1>Rooms</h1>
+              <h1>Projects</h1>
               <nav>
                 <ol class="breadcrumb">
-                  <li class="breadcrumb-item">{{room_count}} room{{room_count|pluralize}} found</li>
+                  <li class="breadcrumb-item">{{project_count}} project{{project_count|pluralize}} found</li>
                 </ol>
               </nav>
           </div><!-- End Page Title -->
           <div class="col-lg-4 create-button">
-            <a href="{% url 'create-room' %}" class="btn btn-primary rounded-pill">Create Room</a>
+            <a href="{% url 'create-project' %}" class="btn btn-primary rounded-pill">Create Project</a>
           </div>
         </div>
       </div>
@@ -29,18 +29,46 @@
       <div class="col-lg-8">
         <div class="row">
           
+          <!-- Profile Editing Prompt -->
+          <!-- {% if registered %} -->
+          <button type="button" id="promptclick" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ProfilePromptModal" hidden></button>
+          <div class="modal fade" id="ProfilePromptModal" tabindex="-1" style="display: none;" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Message Editor</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="row mb-3">
+                    <div class="col-sm-10">
+                      <small>Before you get started, head over to your profile page to fill out your details.
+                        The more people know about you and what you bring to the table, the easier it is for
+                          you to connect and find the right people for your project.</small>                      </div>
+                    <div class="editor-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" name="edit_form" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+          
+          <!-- {% endif %} -->
         
-          <!-- Room Cards -->
-          {% for room in rooms %}
+          <!-- Project Cards -->
+          {% for project in projects %}
 
           <!-- Start Room Card -->
           <div class="col-xxl-4 col-xl-12">
             <div class="card">
-                <a href="{% url 'room' room.id %}">
-                  <h5 class="card-title">{{room.name}}<br> <span class="small">Hosted By: {{room.host.username}}</span></h5>
+                <a href="{% url 'project' project.id %}">
+                  <h5 class="card-title">{{project.name}}<br> <span class="small">Hosted By: {{project.host.username}}</span></h5>
                   <!-- <div class="card-header"></div> -->
                   <div class="card-body">
-                    {{room.description}}
+                    {{project.description}}
                   </div>
                 </a>
             </div>

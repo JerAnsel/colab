@@ -1,3 +1,4 @@
+from urllib import request
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib import messages
@@ -5,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Message, Room, Topic, UploadImage
-from .forms import RoomForm, UserImage, UserForm, ProfileForm
+from .models import Message, Room, Project, Topic, UploadImage
+from .forms import ProjectForm, UserImage, UserForm, ProfileForm
 
 # Create your views here.
 
@@ -90,21 +91,54 @@ def registerPage(request):
 def home(request):
     q = request.GET.get('q') if request.GET.get('q') != None else ''
 
-    rooms = Room.objects.filter(
+    projects = Project.objects.filter(
        Q(topic__name__icontains=q) |
        Q(name__icontains=q) |
        Q(description__icontains=q) 
     )
     topics = Topic.objects.all()
-    room_count = rooms.count()
+    project_count = projects.count()
 
-    context = {'rooms': rooms, 'topics': topics, 'room_count': room_count}
+    context = {'projects': projects, 'topics': topics, 'project_count': project_count}
     return render(request, 'base/home.html', context)
 
-def room(request, pk):
+def project(request, pk):
     topics = Topic.objects.all()
     
-    room = Room.objects.get(id=pk)
+    project = Project.objects.get(id=pk)
+
+    if request.method == 'POST':
+        project.members.add(request.user)
+
+    members = project.members.all()
+    is_member = request.user in members
+
+    context = {'project': project,
+               'topics': topics, 
+               'members': project.members.all(),
+               'is_member': is_member}
+               
+    return render(request, 'base/project.html', context)
+
+def room(request, pk, public):
+    topics = Topic.objects.all()
+    
+    project = Project.objects.get(id=pk)
+
+    if public == 'private' and request.user not in project.members.all():
+        return HttpResponse('Only project members can enter the Conference room.')
+
+
+    project_rooms = Room.objects.filter(room_project=project)
+
+    if project_rooms[0].private:
+        private_room = project_rooms[0]
+        public_room = project_rooms[1]
+    else:
+        private_room = project_rooms[1]
+        public_room = project_rooms[0]
+
+    room = private_room if not (public == 'public') else public_room
 
     room_messages = room.message_set.all().order_by('-created')
 
@@ -119,7 +153,7 @@ def room(request, pk):
                 body=request.POST.get('body')
             )
             room.participants.add(request.user)
-            return redirect('room', pk=room.id)
+            return redirect('room', pk=project.id, public=public)
 
         elif 'edit_form' in request.POST:
             message = Message.objects.get(
@@ -127,59 +161,72 @@ def room(request, pk):
                 )
             message.body = request.POST.get('body')
             message.save()
-            return redirect('room', pk=room.id)
+            return redirect('room', pk=project.id, public=public)
         
         elif 'delete_message' in request.POST:
             message = Message.objects.get(
                     id=request.POST.get('mid'),
                 )
             message.delete()
-            return redirect('room', pk=room.id)
+            return redirect('room', pk=project.id, public=public)
 
-    context = {'room': room, 'room_messages': room_messages, 'participants':participants, 'topics': topics}
+    context = {'project': project,
+               'room': room,
+               'room_messages': room_messages, 
+               'participants': participants, 
+               'topics': topics}
+
     return render(request, 'base/room.html', context)
 
 @login_required(login_url='/login')
-def createRoom(request):
+def createProject(request):
     topics = Topic.objects.all()
-    form = RoomForm()
+    form = ProjectForm()
     update = False
 
     if request.method == 'POST':
-        form = RoomForm(request.POST)
+        form = ProjectForm(request.POST)
         if form.is_valid():
-            new_room = form.save(commit=False)
-            new_room.host = request.user
-            new_room.save()
+            new_project = form.save(commit=False)
+            new_project.host = request.user
+            new_project.save()
+            new_project.members.add(request.user)
+            new_project.save()
+
+            # Create public and private rooms
+            public_room = Room(private=False, room_project=new_project)
+            private_room = Room(private=True, room_project=new_project)
+            public_room.save()
+            private_room.save()
             return redirect('home')
 
     context = {'topics': topics, 'form': form, 'update': update}
-    return render(request, 'base/room_form.html', context)
+    return render(request, 'base/project_form.html', context)
 
 @login_required(login_url='/login')
-def updateRoom(request, pk):
-    room = Room.objects.get(id=pk)
-    form = RoomForm(instance=room)
+def updateProject(request, pk):
+    project = Project.objects.get(id=pk)
+    form = ProjectForm(instance=project)
     topics = Topic.objects.all()
 
     update = True
 
-    if request.user != room.host:
+    if request.user != project.host:
         return HttpResponse('You are not allowed here!!')
 
     if request.method == 'POST':
-        if 'delete_room' in request.POST:
-            room.delete()
+        if 'delete_project' in request.POST:
+            project.delete()
             return redirect('home')
 
 
-        form = RoomForm(request.POST, instance=room)
+        form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             form.save()
             return redirect('home')
 
     context = {'topics': topics, 'form': form, 'update': update}
-    return render(request, 'base/room_form.html', context)
+    return render(request, 'base/project_form.html', context)
 
 # @login_required(login_url='/login')
 # def deleteRoom(request, pk):
@@ -224,8 +271,10 @@ def profile(request, pk):
             user_form.save()
             return redirect('home')
 
-    context = {'topics': topics, 'user_form': user_form, 'profile_form': profile_form, 'update': update}
-
+    context = {'topics': topics, 
+               'user_form': user_form, 
+               'profile_form': profile_form, 
+               'update': update}
 
     prof = request.user.profile
 

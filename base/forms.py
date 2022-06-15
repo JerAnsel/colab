@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 import django.forms as forms
-from .models import Room, UploadImage, Profile
+from .models import Project, Room, UploadImage, Profile
 from django.contrib.auth.models import User
 
 from django.contrib.auth.forms import UserCreationForm
@@ -58,11 +58,13 @@ class UserImage(ModelForm):
         # It includes all the fields of model  
         fields = '__all__'  
 
-class RoomForm(ModelForm):
-    name = forms.CharField(widget=forms.TextInput(attrs={'id':"room_name_input", 'name':"name", 'class': 'form-control'}))
+class ProjectForm(ModelForm):
+    widgets = {
+        'name': forms.TextInput(attrs={'id':"room_name_input", 'name':"name", 'class': 'form-control'}),
+        'topic': forms.Select(attrs={'id':"room_topic_input", 'name':"topic", 'class': 'form-control'}),
+
+    }
     
-    topi = forms.Select(attrs={'id':"chest", 'name':"topic", 'class': 'form-control'})
-    t = forms.CharField()
     class Meta:
-        model = Room
+        model = Project
         exclude = ['host', 'participants']

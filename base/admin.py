@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
 # Register your models here.
-from .models import CodingLanguage, SpokenLanguage, Room, Topic, Message, Profile
+from .models import CodingLanguage, Project, Skill, SpokenLanguage, Room, Topic, Message, Profile
 
 class ProfileInline(admin.StackedInline):
     model = Profile
@@ -24,9 +24,11 @@ admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
 
-
+admin.site.register(Project)
 admin.site.register(Room)
 admin.site.register(Topic)
 admin.site.register(Message)
 admin.site.register(CodingLanguage)
 admin.site.register(SpokenLanguage)
+admin.site.register(Profile)
+admin.site.register(Skill)
