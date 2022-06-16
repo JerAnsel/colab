@@ -96,7 +96,7 @@
                   <!-- <div class="card-header"></div> -->
                 <div class="card-body message-content">
                     {% if not is_member %}
-                    <form action="" >
+                    <form action="" method="POST">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-primary btn-sm">Join</button>
                     </form>
