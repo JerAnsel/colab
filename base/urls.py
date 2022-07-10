@@ -1,9 +1,15 @@
 from django.urls import path
 from django.conf import settings 
 from django.conf.urls.static import static  
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView
+)
+
 from . import views
 
 urlpatterns = [
+    path('userlogin/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+
     path('login/', views.loginPage, name='login'),
     path('logout/', views.logoutUser, name='logout'),
     path('register/', views.registerPage, name='register'),
